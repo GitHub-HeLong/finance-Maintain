@@ -10,12 +10,17 @@ public interface FinanceMysql {
 
 	public List<Map<String, Object>> queryUserOrderByMonth(String month);
 
+	/**
+	 * 获取试机表中，所有用户和设备防区编号
+	 */
+	public List<Map<String, Object>> queryTyrZoneOrderByMonth();
+
 	public void insertDeviceZone(final List<Map<String, Object>> list);
 
 	public void insertDeviceTyrZone(final List<Map<String, Object>> list,
 			final List<Map<String, Object>> results);
 
-	public void updateDeviceTyrZone(Map<String, Object> map, String month);
+	public void updateDeviceTyrZone(String userId, String zoneId, String month);
 
 	public void updateEvent(String userId, String month, String D,
 			String eventType);

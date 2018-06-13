@@ -1,8 +1,7 @@
 package com.server;
 
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.annotation.Resource;
 
@@ -28,33 +27,20 @@ public class MqService {
 	@Resource
 	FinanceMysql financeMysql;
 
-	/**
-	 * 更新报警事件信息
-	 * 
-	 * @param alertPojo
-	 * @return
-	 */
-	public JSONObject alarmInfo(JSONObject alertPojo) {
-		JSONObject json = new JSONObject();
+	static List<String> noAlarmCode = new ArrayList<String>();// 误报
 
-		String accountNum = alertPojo.getString("accountNum");
-		String sysCode = alertPojo.getString("sysCode");
-		String eventTime = alertPojo.getString("eventTime");
+	static List<String> sysCodys = new ArrayList<String>(); // 报警类型
 
-		String D = eventTime.substring(8, 9).equals("0") ? eventTime.substring(
-				9, 10) : eventTime.substring(8, 10);
+	static {
+		noAlarmCode.add("4");
+		noAlarmCode.add("5");
+		noAlarmCode.add("8");
 
-		try {
-			financeMysql.updateEvent(accountNum, eventTime.substring(0, 7), D,
-					sysCode);
-
-		} catch (Exception e) {
-			LOGGER.error(e.getMessage(), e);
-		}
-
-		json.put("code", 200);
-		json.put("msg", "success");
-		return json;
+		sysCodys.add("E123");
+		sysCodys.add("E122");
+		sysCodys.add("E134");
+		sysCodys.add("E131");
+		sysCodys.add("E130");
 	}
 
 	/**
@@ -72,18 +58,16 @@ public class MqService {
 				9, 10) : eventTime.substring(8, 10);
 
 		String zoneCode = "1"; // 用户试机
-		String[] noAlarmCode = { "4", "5", "8" }; // 误报
 		String hjErrorCode = "10"; // 环境误报
 		String rgErrorCode = "9"; // 人工误报
 		String sbErrorCode = "12"; // 设备误报
 
 		try {
 			if (zoneCode.equals(actualSituation)) { // 更新试机表
-				Map<String, Object> map = new HashMap<String, Object>();
-				map.put("accountNum", accountNum);
-				map.put("zoneNum", accountZone);
-				financeMysql
-						.updateDeviceTyrZone(map, eventTime.substring(0, 7));
+
+				financeMysql.updateDeviceTyrZone(accountNum, accountZone,
+						eventTime.substring(0, 7));
+
 			} else if (hjErrorCode.equals(actualSituation)) { // 更新环境误报
 				financeMysql.updateEvent(accountNum, eventTime.substring(0, 7),
 						D, "hj_error");
@@ -104,7 +88,7 @@ public class MqService {
 						D, "noAlarm");
 			}
 
-			if (Arrays.asList(noAlarmCode).contains(actualSituation)) {// 更新误报信息
+			if (noAlarmCode.contains(actualSituation)) {// 更新误报信息
 				financeMysql.updateEvent(accountNum, eventTime.substring(0, 7),
 						D, "noAlarm");
 			}
@@ -129,9 +113,16 @@ public class MqService {
 		String D = eventTime.substring(8, 9).equals("0") ? eventTime.substring(
 				9, 10) : eventTime.substring(8, 10);
 
+		String sysCode = alertPojo.getString("sysCode");
+
 		try {
 			financeMysql.updateEvent(accountNum, eventTime.substring(0, 7), D,
 					"isAlarm");
+			if (sysCodys.contains(sysCode)) {
+				financeMysql.updateEvent(accountNum, eventTime.substring(0, 7),
+						D, sysCode);
+			}
+
 		} catch (Exception e) {
 			LOGGER.error(e.getMessage(), e);
 		}
@@ -141,5 +132,4 @@ public class MqService {
 		return json;
 
 	}
-
 }

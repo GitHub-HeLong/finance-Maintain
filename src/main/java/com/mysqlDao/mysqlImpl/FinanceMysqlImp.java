@@ -50,12 +50,21 @@ public class FinanceMysqlImp implements FinanceMysql {
 	}
 
 	/**
-	 * 获取某个月份的所有用户编号
+	 * 获取事件表中，某个月份的所有用户编号
 	 */
 	public List<Map<String, Object>> queryUserOrderByMonth(String month) {
 		String sql = "SELECT DISTINCT userId FROM event_info WHERE MONTH = ? ";
 		List<Map<String, Object>> list = financeJdbcTemplate.queryForList(sql,
 				month);
+		return list;
+	}
+
+	/**
+	 * 获取试机表中，所有用户和设备防区编号
+	 */
+	public List<Map<String, Object>> queryTyrZoneOrderByMonth() {
+		String sql = "SELECT userId,zone FROM try_zone ";
+		List<Map<String, Object>> list = financeJdbcTemplate.queryForList(sql);
 		return list;
 	}
 
@@ -121,21 +130,18 @@ public class FinanceMysqlImp implements FinanceMysql {
 	/**
 	 * 更新用户设备防区试机信息, 试机状态不为1，如果设备试机更新成功，在试机表加1
 	 */
-	public void updateDeviceTyrZone(Map<String, Object> map, String month) {
+	public void updateDeviceTyrZone(String userId, String zoneId, String month) {
 
 		String sql = "UPDATE try_zone SET tryStatus=1 WHERE userId =? AND zone=? AND  (tryStatus <> 1 OR tryStatus IS NULL)";
-		int i = financeJdbcTemplate.update(sql, map.get("accountNum"),
-				map.get("zoneNum"));
+		int i = financeJdbcTemplate.update(sql, userId, zoneId);
 
-		LOGGER.info("试机用户  accountNum :" + map.get("accountNum").toString()
-				+ "  试机用户防区zoneNum :" + map.get("zoneNum").toString()
-				+ "  是否更新试机信息i:" + i);
+		LOGGER.info("试机用户  accountNum :" + userId + "  试机用户防区zoneNum :"
+				+ zoneId + "  是否更新试机信息i:" + i);
 
 		// 如果设备试机更新成功，在试机表加1
 		if (i == 1) {
 			String sqlTryAlarm = "UPDATE try_alarm SET tryNum=tryNum+1 WHERE month=? AND userId = ? ";
-			financeJdbcTemplate.update(sqlTryAlarm, month,
-					map.get("accountNum"));
+			financeJdbcTemplate.update(sqlTryAlarm, month, userId);
 		}
 	}
 

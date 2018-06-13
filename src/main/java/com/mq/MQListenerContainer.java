@@ -37,15 +37,7 @@ public class MQListenerContainer implements MessageListener {
 
 				String mode = (String) json.get("mode");
 
-				// 新报警信息
-				if ("add".equals(mode)
-						&& Arrays.asList(sysCody).contains(
-								alertPojo.get("sysCode"))) {
-
-					logger.info(" -- 新报警信息 -- ");
-					mqService.alarmInfo(alertPojo);
-
-				} else if ("complete".equals(mode)
+				if ("complete".equals(mode)
 						&& "2".equals(alertPojo.get("disposeType"))
 						&& Arrays.asList(verifyActualSituation).contains( // 新核警单
 								alertPojo.get("actualSituation"))) {
