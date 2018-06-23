@@ -71,9 +71,7 @@ public class EventService {
 				LOGGER.info("试机 userId:" + map.get("userId").toString()
 						+ "  zoneId:" + map.get("zone").toString()
 						+ " zoneSize:" + zoneSize);
-			}
 
-			if (zoneSize > 1) {
 				financeMysql.updateDeviceTyrZone(map.get("userId").toString(),
 						map.get("zone").toString(), month); // 更新试机信息
 			}

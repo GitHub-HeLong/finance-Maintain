@@ -95,6 +95,14 @@ public class FinanceMysqlImp implements FinanceMysql {
 	}
 
 	/**
+	 * 每月更新试机防区表时候清空表中的数据重新加载信息
+	 */
+	public void cleanTryZone() {
+		String sql = "TRUNCATE TABLE try_zone";
+		financeJdbcTemplate.execute(sql);
+	}
+
+	/**
 	 * 插入试机防区信息
 	 */
 	public void insertDeviceTyrZone(final List<Map<String, Object>> list,

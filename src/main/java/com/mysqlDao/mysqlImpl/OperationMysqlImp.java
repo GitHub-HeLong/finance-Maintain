@@ -29,13 +29,13 @@ public class OperationMysqlImp implements OperationMysql {
 	}
 
 	/**
-	 * 查询所有金融行业的用户以及主设备和用户本平台id信息
+	 * 查询所有金融行业的用户以及主设备和用户本平台id信息 设备只统计报警主机
 	 * 
 	 * @return
 	 */
 	public List<Map<String, Object>> queryFinance() {
-		String sql = "SELECT a.userId,b.platformId,c.devId,c.devInstDate FROM imm_customerattr a,imm_userinfo b,imm_devinfo c  "
-				+ "WHERE a.businessId IN (19,42,65) AND a.userId=b.userId AND a.userId=c.ownerId AND c.controlType IN ('master','both')";
+		String sql = "SELECT a.userId,b.platformId,d.devId,c.devInstDate FROM imm_customerattr a,imm_userinfo b,imm_devinfo c,imm_alarmhostattr d "
+				+ "WHERE a.businessId IN (19,42,65) AND a.userId=b.userId AND a.userId=c.ownerId AND c.controlType IN ('master','both') and c.devId=d.devId";
 		List<Map<String, Object>> list = jdbctemplate.queryForList(sql);
 		return list;
 	}

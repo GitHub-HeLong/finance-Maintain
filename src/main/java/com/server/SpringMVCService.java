@@ -128,6 +128,7 @@ public class SpringMVCService {
 		try {
 			financeMysql.insertDeviceZone(tryAlarm); // 插入数据到试机表
 
+			financeMysql.cleanTryZone(); // 每个月清空试机防区表数据，或者每次加载数据的时候清空表数据
 			financeMysql.insertDeviceTyrZone(tryAlarm, results); // 插入数据到试机防区表
 		} catch (Exception e) {
 			LOGGER.error(e.getMessage(), e);

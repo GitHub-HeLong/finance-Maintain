@@ -15,6 +15,11 @@ public interface FinanceMysql {
 	 */
 	public List<Map<String, Object>> queryTyrZoneOrderByMonth();
 
+	/**
+	 * 每月更新试机防区表时候清空表中的数据重新加载信息
+	 */
+	public void cleanTryZone();
+
 	public void insertDeviceZone(final List<Map<String, Object>> list);
 
 	public void insertDeviceTyrZone(final List<Map<String, Object>> list,

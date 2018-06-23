@@ -50,11 +50,11 @@ public class SpringMVCCtrl {
 			HttpServletResponse response) throws Exception {
 		JSONObject json = new JSONObject();
 
-		// springMVCService.queryFinanceService();// 获取用户信息表
+		springMVCService.queryFinanceService();// 获取用户信息表
 
 		eventService.checkoutTryZoneAndAlarm(); // 更新试机表信息
 
-		// 获取真警信息更新到数据事件表
+		// // 获取真警信息更新到数据事件表
 		// String[] actualSituations = { "3", "6", "7" };
 		// eventService.checkIsAlarm("processing", actualSituations, "isAlarm");
 		//
@@ -63,46 +63,9 @@ public class SpringMVCCtrl {
 		// };
 		// eventService.checkIsAlarm("verify", noAlarmActualSituations,
 		// "noAlarm");
-
-		// 获取环境误报信息更新到数据事件表
-		// String[] actualSituations = { "10" };
-		// JSONObject json = eventService.updateEvents(actualSituations,
-		// "verify",
-		// "hj_error");
-
-		// 获取人工误报信息更新到数据事件表
-		// String[] actualSituations = { "9" };
-		// JSONObject json = eventService.updateEvents(actualSituations,
-		// "verify",
-		// "rg_error");
-
-		// 获取设备误报信息更新到数据事件表
-		// String[] actualSituations = { "12" };
-		// JSONObject json = eventService.updateEvents(actualSituations,
-		// "verify",
-		// "sb_error");
-
-		// 有声劫盗
-		// JSONObject json = eventService.updateAlarmEventService("E123",
-		// "E123");
-
-		// 无声劫盗
-		// JSONObject json = eventService.updateAlarmEventService("E122",
-		// "E122");
-
-		// 出入防区
-		// JSONObject json = eventService.updateAlarmEventService("E134",
-		// "E134");
-
-		// 周边防区
-		// JSONObject json = eventService.updateAlarmEventService("E131",
-		// "E131");
-
-		// 盗窃
-		// JSONObject json = eventService.updateAlarmEventService("E130",
-		// "E130");
-
-		// deviceBCFService.updateBCFService(); // 更新布撤防信息
+		//
+		// // 更新布撤防信息
+		// deviceBCFService.updateBCFService();
 
 		return json;
 	}
